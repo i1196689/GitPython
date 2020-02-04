@@ -14,5 +14,5 @@ print (len(s))
 
 for ch in s:
     t=open("test_1.txt","a")
-    t.write(str(ch)+"\n")#用str函数
+    t.write(str(ch)+"\n")#需用str函数。
     t.close()
