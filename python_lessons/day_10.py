@@ -11,7 +11,7 @@ a.sort(reverse=True)
 print(a)
 
 print(sorted(b,reverse=True))
-'''
+
 class Myclass():
     def __init__(self):
         self.value=0
@@ -26,5 +26,23 @@ my3=Myclass()
 my3.value=10
 a=[my1,my2,my3]
 print(a)
+'''
 
+from itertools import islice
 
+gen=iter(range(10))
+
+for i in islice(gen,3,8):
+    print(i)
+
+a= [i for i in range(10)]
+print(a)
+print(type(a))
+b=(i for i in range(10))
+print(b)
+print(type(b))
+for i in a:
+    print(i)
+
+for i  in b:
+    print(i*i)
