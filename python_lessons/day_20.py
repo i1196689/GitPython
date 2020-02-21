@@ -30,6 +30,7 @@ for c in data:
 print(maxChar)
 print(d[maxChar])
 '''
+import fire
 class Myclass:
     def process(self):
         pass
@@ -39,3 +40,4 @@ def process():
     pass
 print(type(Myclass().process).__name__=="method")
 print(type(process).__name__=="function")
+fire.Fire()
