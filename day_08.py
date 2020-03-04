@@ -19,3 +19,6 @@ print(a.pop())#删除对象的一个值，默认为最后一个值
 print(a)
 print(b.pop(1))
 print(b)
+a=[1,2,3,4,5,6,3,2,5,7,0,0]
+a=list(set(a))
+print(a)
