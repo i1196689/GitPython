@@ -23,7 +23,7 @@ def create_ant(num_ant,meta_list): #初始化蚂蚁数量
     return gather_list
 
 def calculate(list_list,num_vane):#计算每个蚂蚁的路径
-    sita=[i*(360/num_vane) for i in range(num_vane)]
+    sita=[i*(math.pi*2/num_vane) for i in range(num_vane)]
     def map_list(every_list):
         M_x,M_y=0,0
         for i in range(num_vane):

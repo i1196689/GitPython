@@ -82,13 +82,15 @@ def max_list(each_list):#对每个数字出现的次数进行排序
 
 out_list=create_greed(10,L_2)
 for i in range(50):
-    out_list=sort_greed(100,out_list)
-
+    out_list=sort_greed(50,out_list)
+for each in out_list:
+    print(each)
 print(calculate(out_list))
 print('************************************')
 
 list_order_row=compare(out_list)
 list_order_row=list(map(max_list,list_order_row))
+
 count=0
 for each_dict in list_order_row:
     print('第%s号叶片质量排序:%s'%(count,each_dict))
