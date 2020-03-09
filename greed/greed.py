@@ -25,11 +25,11 @@ def create_greed(num_geed,meta_list): #初始化序列数量
 def calculate(list_list):#计算每个序列的值
     num_vane=len(list_list[0])
     sita=[i*((2*math.pi)/num_vane) for i in range(num_vane)]
-    def map_list(every_list):
+    def map_list(each_list):
         M_x,M_y=0,0
         for i in range(num_vane):
-            M_x+=math.sin(sita[i])*every_list[i]
-            M_y+=math.cos(sita[i])*every_list[i]
+            M_x+=math.sin(sita[i])*each_list[i]
+            M_y+=math.cos(sita[i])*each_list[i]
         return (M_x**2+M_y**2)**(1/2)
     goal_list=list(map(map_list,list_list))
     return goal_list
@@ -37,12 +37,12 @@ def calculate(list_list):#计算每个序列的值
 def sort_greed(num_interation,list_list):#每个序列进行排序
     num_vane=len(list_list[0])
     sita=[i*((2*math.pi)/num_vane) for i in range(num_vane)]
-    def sort_map(every_list):#用于映射
-        def calculate_inner(every_list):#计算序列的值（目标函数）
+    def sort_map(each_list):#用于映射
+        def calculate_inner(each_list):#计算序列的值（目标函数）
             M_x,M_y=0,0
             for i in range(num_vane):
-                M_x+=(math.sin(sita[i]))*every_list[i]
-                M_y+=(math.cos(sita[i]))*every_list[i]
+                M_x+=(math.sin(sita[i]))*each_list[i]
+                M_y+=(math.cos(sita[i]))*each_list[i]
             return (M_x**2+M_y**2)**(1/2)
         
         for iters in range(num_interation):
@@ -50,25 +50,47 @@ def sort_greed(num_interation,list_list):#每个序列进行排序
             rnd_2=random.randint(0,num_vane-1)
             while rnd_1==rnd_2:
                 rnd_2=random.randint(0,num_vane-1)
-            every_list_new=copy.deepcopy(every_list)
-            every_list_new[rnd_1],every_list_new[rnd_2]=every_list[rnd_2],every_list[rnd_1]
-            out_old,out_new=calculate_inner(every_list),calculate_inner(every_list_new)
+            each_list_new=copy.deepcopy(each_list)
+            each_list_new[rnd_1],each_list_new[rnd_2]=each_list[rnd_2],each_list[rnd_1]
+            out_old,out_new=calculate_inner(each_list),calculate_inner(each_list_new)
             if out_new<out_old:
-                every_list=copy.deepcopy(every_list_new)
-        return every_list
+                each_list=copy.deepcopy(each_list_new)
+        return each_list
     out_list=list(map(sort_map,list_list))
     return out_list
+
+def compare(list_list):#取出每个序列的第n个值
+    def get_value_map(each_list):
+        value=each_list[0]
+        each_list.pop(0)
+        return value
+    list_row=[]
+    for i in range(70):
+        list_map=list(map(get_value_map,list_list))
+        list_row.extend([list_map])
+    return list_row
+
+def max_list(each_list):#对每个数字出现的次数进行排序
+    d={}
+    for each in each_list:
+        if each in d:
+            d[each]+=1
+        else:
+            d[each]=1
+    d=dict(sorted(d.items(),key=lambda item:item[1],reverse=True))
+    return d
 
 out_list=create_greed(10,L_2)
 for i in range(50):
     out_list=sort_greed(100,out_list)
 
 print(calculate(out_list))
+print('************************************')
 
-
-
-
-
-
-
+list_order_row=compare(out_list)
+list_order_row=list(map(max_list,list_order_row))
+count=0
+for each_dict in list_order_row:
+    print('第%s号叶片质量排序:%s'%(count,each_dict))
+    count+=1
 
