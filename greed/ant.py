@@ -20,9 +20,3 @@ class ant(object):
 
 
 
-'''
-
-ant_1=ant()
-ant_1.set_name('ant_1')
-ant_1.run()
-'''
