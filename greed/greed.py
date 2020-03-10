@@ -46,13 +46,14 @@ def sort_greed(num_interation,list_list):#每个序列进行排序
             return (M_x**2+M_y**2)**(1/2)
         
         for iters in range(num_interation):
-            rnd_1=random.randint(0,num_vane-1)
-            rnd_2=random.randint(0,num_vane-1)
-            while rnd_1==rnd_2:
+            for times in range(20):
+                rnd_1=random.randint(0,num_vane-1)
                 rnd_2=random.randint(0,num_vane-1)
-            each_list_new=copy.deepcopy(each_list)
-            each_list_new[rnd_1],each_list_new[rnd_2]=each_list[rnd_2],each_list[rnd_1]
-            out_old,out_new=calculate_inner(each_list),calculate_inner(each_list_new)
+                while rnd_1==rnd_2:
+                    rnd_2=random.randint(0,num_vane-1)
+                each_list_new=copy.deepcopy(each_list)
+                each_list_new[rnd_1],each_list_new[rnd_2]=each_list[rnd_2],each_list[rnd_1]
+                out_old,out_new=calculate_inner(each_list),calculate_inner(each_list_new)
             if out_new<out_old:
                 each_list=copy.deepcopy(each_list_new)
         return each_list
