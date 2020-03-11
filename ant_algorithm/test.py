@@ -140,22 +140,3 @@ out_list=start_run(30,20)
 print(out_list)
             
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
