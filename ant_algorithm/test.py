@@ -12,7 +12,7 @@ vane_weight=[58021.555, 58188.973, 58438.129, 58198.211, 58139.844, 58130.465, 5
 ###常数设置：
 info_arf=0.5#信息素的加权值
 info_bta=0.5#能见度的加权值
-info_ori=0.1#其实浓度
+info_ori=0.1#真实浓度
 info_waste=0.5#信息素挥发率
 
 
@@ -63,6 +63,7 @@ def calculate(crl_list):#计算序列的值
 def Rnd():
     rnd=random.random()
     return rnd
+
 def timers(func):#时间修饰器
     def wrapper(*args,**kwargs):
         time_start=time.time()
