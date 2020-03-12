@@ -1,4 +1,4 @@
-import copy,math,random
+import copy,math,random,time
 vane_weight=[58021.555, 58188.973, 58438.129, 58198.211, 58139.844, 58130.465, 58224.496, 58210.168, 
 58008.453, 58201.094, 58151.91, 58088.086, 58245.402, 58153.391, 58309.773, 57871.414, 58140.707, 
 57811.164, 58446.582, 58526.051, 58034.395, 58022.969, 58467.906, 57427.84, 58113.273, 58020.02, 
@@ -10,10 +10,10 @@ vane_weight=[58021.555, 58188.973, 58438.129, 58198.211, 58139.844, 58130.465, 5
 
 
 ###常数设置：
-info_arf=0.5
-info_bta=0.5
-info_ori=0.1
-info_waste=0.5
+info_arf=0.5#信息素的加权值
+info_bta=0.5#能见度的加权值
+info_ori=0.1#其实浓度
+info_waste=0.5#信息素挥发率
 
 
 def create_map(value):#生成所有路径
@@ -63,13 +63,22 @@ def calculate(crl_list):#计算序列的值
 def Rnd():
     rnd=random.random()
     return rnd
-
+def timers(func):#时间修饰器
+    def wrapper(*args,**kwargs):
+        time_start=time.time()
+        f=func(*args,**kwargs)
+        time_end=time.time()
+        time_cost=time_end-time_start
+        print('程序%s运行时间为:%s.'%(func.__name__,time_cost))
+        return f
+    return wrapper
+@timers
 def start_run(m,n):#  m只蚂蚁迭代n轮
     for iters in range(n):
         for ant in range(m):
-            road_wait=[]
+            road_wait=[]#已选择的叶片存贮列表
             for road_count in range(vane_len):
-                road_wait_plus=[]
+                road_wait_plus=[]#待选择叶片
                 if road_count==0:
                     for each_road in vane_road:
                         if each_road[3]==0:
@@ -84,21 +93,20 @@ def start_run(m,n):#  m只蚂蚁迭代n轮
                         each_poss[6]/=road_possible_all
                         poss_all+=each_poss[6]
                         each_poss[6]=poss_all
-                    poss_num=-1
+                    poss_num=0
                     god_num=Rnd()
                     for each_poss_num in road_wait_plus:
-                        if god_num<each_poss_num[6]:
+                        if god_num>each_poss_num[6]:
                             poss_num+=1
                     road_wait.extend([road_wait_plus[poss_num]])
-                    road_count+=1
                 else:
                     road_distory=[]
                     for each_distroy in road_wait:
                         road_distory.extend(each_distroy)
                     for each_road_other in vane_road:
                         if each_road_other[3]==road_count:
-                            if road_wait[road_count-1][1]==each_road_other[0] and (each_road_other[2] not in road_distory):
-                                road_wait_plus.extend([each_road_other])
+                            if each_road_other[0]==road_wait[road_count-1][1] and (each_road_other[1] not in road_distory):
+                                    road_wait_plus.extend([each_road_other])
                     road_possible_all=0
                     for each_road_wait_plus_other in road_wait_plus:
                         road_possible_each=(((each_road_wait_plus_other[5]))**(info_bta))*(each_road_wait_plus_other[4]**(info_arf))
@@ -109,26 +117,27 @@ def start_run(m,n):#  m只蚂蚁迭代n轮
                         each_poss_other[6]/=road_possible_all
                         poss_all+=each_poss_other[6]
                         each_poss_other[6]=poss_all
-                    poss_num=-1
+                    poss_num=0
                     god_num=Rnd()
                     for each_poss_num_other in road_wait_plus:
-                        if god_num<each_poss_num_other[6]:
+                        if god_num>each_poss_num_other[6]:
                             poss_num+=1
-                    road_wait.extend([road_wait_plus[poss_num]])
-                    road_count+=1
-            cover_road=[]
-            for index in range(vane_len):
-                if index==0:
-                    cover_road.append(road_wait[index][0])
-                else:
-                    cover_road.append(road_wait[index][1])
-            fin_value=calculate(cover_road)
-            fin_value_reverse=1/fin_value
-            for add_fin_value_reverse in road_wait:
-                temp_list=add_fin_value_reverse[:6]
-                if temp_list in vane_road:
-                    list_index=vane_road.index(temp_list)
-                    vane_road[list_index][5]+=fin_value_reverse
+                    if len(road_wait_plus)>0:
+                        road_wait.extend([road_wait_plus[poss_num]])
+        cover_road=[]
+        for index in range(vane_len-1):
+            if index==0:
+                cover_road.append(road_wait[index][0])
+                cover_road.append(road_wait[index][1])
+            else:
+                cover_road.append(road_wait[index][1])
+        fin_value=calculate(cover_road)
+        fin_value_reverse=1/fin_value
+        for add_fin_value_reverse in road_wait:
+            temp_list=add_fin_value_reverse[:6]
+            if temp_list in vane_road:
+                list_index=vane_road.index(temp_list)
+                vane_road[list_index][5]+=fin_value_reverse
         for each_add_info in vane_road:
             each_add_info[5]=0.1*(info_waste**(iters+1))+each_add_info[5]-0.1*(info_waste**(iters))
     re_list=[]
@@ -136,7 +145,7 @@ def start_run(m,n):#  m只蚂蚁迭代n轮
     re_list.append(fin_value)
     return re_list
 
-out_list=start_run(30,20)
+out_list=start_run(15,2)
 print(out_list)
             
 
