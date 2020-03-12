@@ -146,7 +146,7 @@ def start_run(m,n):#  m只蚂蚁迭代n轮
     re_list.append(fin_value)
     return re_list
 
-out_list=start_run(15,2)
+out_list=start_run(15,2)#第一个参数为蚂蚁个数，第二个参数为迭代次数
 print(out_list)
             
 
