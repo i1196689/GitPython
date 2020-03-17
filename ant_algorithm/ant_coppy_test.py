@@ -44,7 +44,7 @@ def cal_total_distance(routine):
 from sko.ACA import ACA_TSP
 
 aca = ACA_TSP(func=cal_total_distance, n_dim=num_points,
-              size_pop=50, max_iter=200,
+              size_pop=1000, max_iter=200,
               distance_matrix=distance_matrix)########size_pop 为蚂蚁数量，max_iter为迭代次数
 
 best_x, best_y = aca.run()
