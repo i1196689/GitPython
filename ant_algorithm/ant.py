@@ -77,12 +77,15 @@ def timers(func):#时间修饰器
 print(calculate(vane_weight))
 @timers
 def start_run(m,n):#  m只蚂蚁迭代n轮
+    global vane_road
     for iters in range(n):
         for ant in range(m):
             road_wait=[]#已选择的叶片存贮列表
             for road_count in range(vane_len):
-                global vane_road
-                vane_road=[relist[:6] for relist in vane_road]
+                
+                vane_road=[relist[:6] for relist in vane_road]########################
+
+
                 
                 if road_count==0:
                     road_wait_plus=[]#待选择叶片
@@ -113,7 +116,7 @@ def start_run(m,n):#  m只蚂蚁迭代n轮
                     road_wait.extend([road_wait_plus[poss_num]])
                     
                     
-                else:
+                if road_count!=0:
 
                 
                     road_wait_plus=[]#待选择叶片
@@ -145,7 +148,7 @@ def start_run(m,n):#  m只蚂蚁迭代n轮
                             poss_num+=1
                     if len(road_wait_plus)>0:
                         road_wait.extend([road_wait_plus[poss_num]])
-              
+            
             cover_road=[]
             for index in range(vane_len-1):
                 if index==0:
@@ -156,7 +159,7 @@ def start_run(m,n):#  m只蚂蚁迭代n轮
             fin_value=calculate(cover_road)
             fin_value_reverse=1/fin_value
             for add_fin_value_reverse in road_wait:####
-                temp_list=add_fin_value_reverse[:7]
+                temp_list=add_fin_value_reverse[:6]
                 if temp_list in vane_road:
                     list_index=vane_road.index(temp_list)
                     vane_road[list_index][5]+=fin_value_reverse
