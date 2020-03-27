@@ -1,8 +1,8 @@
 import numpy as np
 
 import pandas as pd
-import matplotlib.pyplot as plt
-import math
+
+import math,time
 
 
 #!/usr/bin/env python3
@@ -103,7 +103,7 @@ sita=[i*2*math.pi/num_points for i in range(num_points)]
 #第一个参数为蚂蚁数量，第二个参数为迭代次数，第三个参数为初始信息素浓度,第四个for循环系数。
 ####<<****************************参数设置************
 
-num_pop,num_iters,info_org,num_for=800,1200,0.001,1
+num_pop,num_iters,info_org,num_for=100,100,0.001,15
 
 ###************************************************>>
 
@@ -127,19 +127,21 @@ def cal_total_distance(routine):
 
 '''
 # %% Do ACA
+time_start=time.time()
 out_list=[]
 out_value=[]
 for i in range(num_for):
-  aca = ACA_TSP(func=cal_total_distance, n_dim=num_points,
-                size_pop=num_pop, max_iter=num_iters,
-                distance_matrix=distance_matrix)########size_pop 为蚂蚁数量，max_iter为迭代次数
+    aca = ACA_TSP(func=cal_total_distance, n_dim=num_points,
+                    size_pop=num_pop, max_iter=num_iters,
+                    distance_matrix=distance_matrix)########size_pop 为蚂蚁数量，max_iter为迭代次数
 
-  best_x, best_y = aca.run()
-  out_list.extend([list(best_x)])
-  out_value.append(best_y)
+    best_x, best_y = aca.run()
+    out_list.extend([list(best_x)])
+    out_value.append(best_y)
 
-# %% Plot
-print('蚂蚁个数:%s,迭代次数:%s,初始信息素浓度:%s,for循环次数:%s.'%(num_pop,num_iters,info_org,num_for))
+time_cost=time.time()-time_start
+
+print('运行时间:%s,蚂蚁个数:%s,迭代次数:%s,初始信息素浓度:%s,for循环次数:%s.'%(time_cost,num_pop,num_iters,info_org,num_for))
 print('out_list:%s'%out_list)
 print('**************')
 print('out_value:%s'%out_value)
