@@ -102,9 +102,9 @@ class SA_Tabu(object):
         blade_order = self.Rnd_blade_order
         out         = self.cal_total_distance(blade_order)
         while self.T>self.t:
-            self.T=self.T*self.T_descent_rate
+            self.T = self.T*self.T_descent_rate#降温
             for i in range(self.each_T_internations):
-                temp_list=blade_order.copy()
+                temp_list = blade_order.copy()
                 blade_order_new = self.change_blade_position(blade_order)
                 out_new         = self.cal_total_distance(blade_order_new)
                 delta           = out_new-out
@@ -130,7 +130,7 @@ class SA_Tabu(object):
                             blade_order = blade_order_new
                             out         = out_new
                         else:
-                            blade_order=temp_list.copy()
+                            blade_order = temp_list.copy()
                 self.out_all_list.append(out)
             if len(self.rmb_value_list) >= self.len_list:
                 break;
@@ -140,7 +140,7 @@ class SA_Tabu(object):
         if len(self.rmb_value_list)>0:
             d_store,count = {},0
             d_store['min_value'] = min(self.rmb_value_list)
-            d_store['value']=self.rmb_value_list 
+            d_store['value']     = self.rmb_value_list 
             for value in self.rmb_value_list:
                 d_store['叶片_%s'%count] = self.rmb_blade_order_list[count]
                 d_store['重量_%s'%count] = list(map(self.blade_weight,self.rmb_blade_order_list))[count]
@@ -165,16 +165,16 @@ SA = SA_Tabu(L=L,t=0.0001,T=300,each_T_internations=200,
 '''
 out_value_list,out_blade_list,out_blade_weight,out_all_list=SA.run
 '''
-internations=5
+internations = 5
 name=['name_%s'%i for i in range(internations)]
 if __name__ == '__main__':
-    p  =Pool()#多进程运行
+    p  = Pool()#多进程运行
     for i in range(internations):
         name[i] = p.apply_async(SA.run)
     print('程序开始运行.....')
     p.close()
     p.join()
-    out = [name[i].get() for i in range(internations)]
+    out   = [name[i].get() for i in range(internations)]
     count = 0
     writer=pd.ExcelWriter('out.xlsx')#写入文件
     for each_list in out:
