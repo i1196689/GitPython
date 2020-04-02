@@ -1,4 +1,5 @@
 import PySimpleGUI as sg
+'''
 class GUI(object):
     @property
     def create_gui(self):
@@ -21,3 +22,4 @@ class GUI(object):
         window.close()
 dis=GUI()
 dis.create_gui
+'''

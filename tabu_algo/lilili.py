@@ -1,4 +1,3 @@
-
 #!user/bin/env python
 # _*_ coding: utf-8 _*_
  
@@ -14,7 +13,7 @@ import numpy as np
 import pandas as pd
 from pandas.core.series import Series
 from matplotlib import pyplot as plt
-from multiprocessing import Pool
+
 
 L_1=[47, 15, 29, 57, 52, 40, 20, 44, 45, 65, 12, 32, 50, 67, 33, 9, 30, 42, 11, 13, 60, 
 18, 8, 59, 23, 31, 28, 6, 41, 55, 66, 19, 49, 24, 1, 56, 5, 43, 38, 39, 46, 70, 22, 26, 
@@ -85,10 +84,11 @@ class SA_Tabu(object):
         self.blade_order[Rnd_2] = temp
         return self.blade_order
 
-    def blade_weight(self,blade_list): #输出重量函数
+    def blade_weight(self,blade_list):
         self.blade_list=blade_list
         out=[L[i] for i in self.blade_list]
         return out
+
 
 
 
@@ -97,14 +97,14 @@ class SA_Tabu(object):
     def Rnd(self): #生成随机数
         return random.random()
 
-    
+    @property
     def run(self):
         blade_order = self.Rnd_blade_order
         out         = self.cal_total_distance(blade_order)
         while self.T>self.t:
-            self.T = self.T*self.T_descent_rate#降温
+            self.T=self.T*self.T_descent_rate
             for i in range(self.each_T_internations):
-                temp_list = blade_order.copy()
+                temp_list=blade_order.copy()
                 blade_order_new = self.change_blade_position(blade_order)
                 out_new         = self.cal_total_distance(blade_order_new)
                 delta           = out_new-out
@@ -130,8 +130,8 @@ class SA_Tabu(object):
                             blade_order = blade_order_new
                             out         = out_new
                         else:
-                            blade_order = temp_list.copy()
-                self.out_all_list.append(out)
+                            blade_order=temp_list.copy()
+            self.out_all_list.append(out)
             if len(self.rmb_value_list) >= self.len_list:
                 break;
         #################################################
@@ -140,14 +140,19 @@ class SA_Tabu(object):
         if len(self.rmb_value_list)>0:
             d_store,count = {},0
             d_store['min_value'] = min(self.rmb_value_list)
-            d_store['value']     = self.rmb_value_list 
+            d_store['value']=self.rmb_value_list 
             for value in self.rmb_value_list:
                 d_store['叶片_%s'%count] = self.rmb_blade_order_list[count]
                 d_store['重量_%s'%count] = list(map(self.blade_weight,self.rmb_blade_order_list))[count]
                 count += 1
-            return [d_store]
+            d_frame = pd.DataFrame(dict([ (k,Series(v)) for k,v in d_store.items() ]))
+            #d_frame.to_excel('SA_tabu.xlsx',sheet_name='out',index=False)
+            d_frame.to_excel('out.xlsx',sheet_name='out',index=False)
+            plt.plot(self.out_all_list)
+            plt.show()
+            return print('程序结束.')
         else:
-            return [{'None':None}]
+            return print('未得到符合要求的值，please try again...')
 
         
 
@@ -156,35 +161,21 @@ class SA_Tabu(object):
 '''
 
 
+
+print('程序开始运行.....')
 time_start = time.time()
-SA = SA_Tabu(L=L,t=0.0001,T=300,each_T_internations=200,
+SA = SA_Tabu(L=L,t=0.0001,T=7000,each_T_internations=200,
                     T_descent_rate=0.99,threshold_value=0.1,
                     threshold_t=10,re_T=80,len_list=2)
 #print('t起始温度 %s ,T终止温度 %s ,each_T_internations当前温度下的迭代次数 %s ,T_descent_rate温度下降率 %s ,threshold_value加入禁忌表阈值 %s ,threshold_t启动候选列表的温度阈值 %s ,re_T候选解的运行的温度 %s ,len_list程序终止条件(禁忌列表长度) %s .'%())
-
+SA.run
 '''
 out_value_list,out_blade_list,out_blade_weight,out_all_list=SA.run
 '''
-internations = 5
-name=['name_%s'%i for i in range(internations)]
-if __name__ == '__main__':
-    p  = Pool()#多进程运行
-    for i in range(internations):
-        name[i] = p.apply_async(SA.run)
-    print('程序开始运行.....')
-    p.close()
-    p.join()
-    out   = [name[i].get() for i in range(internations)]
-    count = 0
-    writer=pd.ExcelWriter('out.xlsx')#写入文件
-    for each_list in out:
-        for each_dict in each_list:
-            d_frame = pd.DataFrame(dict([ (k,Series(v)) for k,v in each_dict.items() ]))
-            #d_frame.to_excel('SA_tabu.xlsx',sheet_name='out',index=False)
-            d_frame.to_excel(writer,sheet_name='out_%s'%count,index=False)
-        count += 1
-    writer.close()
-    writer.save()
-    time_cost = time.time()-time_start
-    print('程序运行时间: %s .'%time_cost)
+time_cost = time.time()-time_start
+print('程序运行时间: %s .'%time_cost)
 
+
+
+
+            
