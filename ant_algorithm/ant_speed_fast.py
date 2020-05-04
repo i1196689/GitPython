@@ -129,13 +129,13 @@ def num_to_blade(list_org):
     out=[L[i] for i in list_org]
     return out
 ############################################     参数设置    ##################################################
-num_pop,num_iters,info_org,interation=1500,1500,0.1,15
+num_pop,num_iters,info_org,interation=4000,1500 ,0.01,9
 #######################   如上参数:   第一个为蚂蚁数量，第二个为迭代次数，第三个为信息素浓度，第四个为for循环次数     ######################################################################
 time_start=time.time()
 p_name=['p_%s'%i for i in range(interation)]
 out_list,out_value=[],[]
 if __name__=='__main__':
-    p=Pool()
+    p=Pool(9)
     for i in range(interation):
         p_name[i]=p.apply_async(ant_run,(num_pop,num_iters,info_org,L))
     print('>>>  程序开始运行.....')
@@ -149,8 +149,8 @@ if __name__=='__main__':
     out_list=list(map(add_one,out_list))
     time_cost=time.time()-time_start
     list_blade=list(map(num_to_blade,out_list))
-    print('>>>  运行时间: %s ,蚂蚁数量: %s , 迭代次数: %s , 信息素浓度: %s ,for循环次数: %s .'%(time_cost,num_pop,num_iters,info_org,interation))
-    print('out_value:%s'%out_value)
     print('out_list:%s'%out_list)
     print('list_blade:%s'%list_blade)
-    
+    print('####################################################################################################################')
+    print('>>>  运行时间: %s 分钟,蚂蚁数量: %s , 迭代次数: %s , 信息素浓度: %s ,for循环次数: %s .'%(time_cost/60,num_pop,num_iters,info_org,interation))
+    print('out_value:%s'%out_value)
