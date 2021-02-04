@@ -42,128 +42,53 @@ def save(data,path):
             sheet1.write(i, j, data[i][j])
     f.close()
 
-path_train = r'C:\Users\liuju\Documents\MATLAB\MIT_HIT\对比\train.xlsx'
-path_test = r'C:\Users\liuju\Documents\MATLAB\MIT_HIT\对比\test.xlsx'
-
-path_trainlabel = r'C:\Users\liuju\Documents\MATLAB\MIT_HIT\对比\train_lable_bp.xlsx'
-path_testlabel = r'C:\Users\liuju\Documents\MATLAB\MIT_HIT\对比\test_label_bp.xlsx'
 
 
-data_train = import_excel_matrix(path_train)
-data_trainlab = import_excel_matrix(path_trainlabel)
-data_test = import_excel_matrix(path_test)
-data_testlab = import_excel_matrix(path_testlabel)
-#####################################################
+def pro(s):
+    path_train = r'C:\Users\liuju\Documents\MATLAB\MIT_HIT\对比\五种类别\train\均值标准差\主要特征提取\90特征点\%s.xlsx'%(s)
+    path_test = r'C:\Users\liuju\Documents\MATLAB\MIT_HIT\对比\五种类别\test\主要特征\90特征点\%s.xlsx'%(s)
+    data_train = import_excel_matrix(path_train)
+    data_test = import_excel_matrix(path_test)
+    return data_train,data_test
 
 
+s = ['S','V','U','F','N']
+label = [0,1,2,3,4]
+data_test = []
+data_train = []
+label_train = []
+label_test = []
+for i in range(5):
+    data_1,data_2 = pro(s[i])
+    if len(data_1)>1000:
+        data_train.extend(data_1[0:1000])
+        tem = [label[i] for j in range(1000)]
+        label_train.extend(tem)
+    else:
+        data_train.extend(data_1)
+        tem = [label[i] for j in range(len(data_1))]
+        label_train.extend(tem)
 
+    # if len(data_2)>1000:
+    #     data_test.extend(data_2[0:1000])
+    #     tem = [label[i] for j in range(1000)]
+    #     label_test.extend(tem)
+    # else:
+    #     data_test.extend(data_2)
+    #     tem = [label[i] for j in range(len(data_2))]
+    #     label_test.extend(tem)
+    data_test.extend(data_2)
+    tem = [label[i] for j in range(len(data_2))]
+    label_test.extend(tem)
+
+    
+print(len(data_train),len(data_test),len(label_train),len(label_test))
 
 data_train = np.matrix(data_train)
 data_test = np.matrix(data_test)
-data_train = data_train[0:3000,:]
 
 
 
-
-data_trainlab = data_trainlab[0:3000]
-
-#######离散化对数据预测有影响，数据长度对数据也有影响。
-
-##############################################################################################################
-#************************************************************************************************************
-#####PCA###########################
-
-
-# def t_pac(data):
-#     data = [met[0:260] for met in data]
-#     data = np.array(data)
-#     pca = PCA(n_components=3)
-#     data = pca.fit(data).transform(data)
-#     data = list(data)
-#     for j in range(len(data)):
-#         data[j] = data[j].tolist()
-#     return data
-
-# data_train_0 = t_pac(data_train)
-# data_test_0 = t_pac(data_test)
-
-
-# for i in range(len(data_train_0)):
-#     data_train_0[i].extend(data_train[i][0:260])
-
-# for h in range(len(data_test_0)):
-#     data_test_0[h].extend(data_test[h][0:260])
-
-# data_train = data_train_0
-# data_test = data_test_0
-
-
-####离散化##############
-# def data_prs(data):
-#     T = np.linspace(-4,4,85)
-#     for E_list in data:
-#         for num in range(len(E_list)):
-#             for i in range(len(T)):
-#                 if E_list[num] >= T[i] and E_list[num] <T[i+1]:
-#                     E_list[num] = T[i+1]
-#                     break
-#     return data
-
-# data_train = data_prs(data_train)
-# data_test = data_prs(data_test)
-
-##################均值化####################
-
-# def t_mean(data):
-#     data = np.mat(data)
-#     [m,n] = data.shape
-#     for i in range(m):
-#         s = np.mean(data[i,:])
-#         if s > 0 :
-#             data[i,:] = data[i,:] - s
-#         else:
-#             data[i,:] = data[i,:] + s
-
-#     return data
-
-# data_train = t_mean(data_train)
-
-# data_test = t_mean(data_test)
-
-
-
-#*********************************************************************************************************************
-################################################################################################################
-
-
-
-
-
-
-
-
-
-# def load_data(file_name):
-#     '''导入数据
-#     input:  file_name(string):文件的存储位置
-#     output: feature_data(mat):特征
-#             label_data(mat):标签
-#             n_class(int):类别的个数
-#     '''
-#     # 1、获取特征
-#     f = open(file_name)  # 打开文件
-#     feature_data = []
-#     label = []
-#     for line in f.readlines():
-#         feature_tmp = []
-#         lines = line.strip().split("\t")
-#         for i in range(len(lines) - 1):
-#             feature_tmp.append(float(lines[i]))
-#         label.append(int(lines[-1]))      
-#         feature_data.append(feature_tmp)
-#     f.close()  # 关闭文件
-    
-#     return np.mat(feature_data), label
 
 def Normalization(data):
     '''样本数据归一化
@@ -251,14 +176,10 @@ def calss_results(Prob,label_class):
                     
 
 
-data_testlab = data_testlab[0:3000]
-data_test = data_test[0:3000,:]
-
-
 
 # 1、导入数据
 print ("--------- 1.load data ------------")
-trainX, labelX = data_train,data_trainlab
+trainX, labelX = data_train,label_train
 
 
 # 2、样本数据归一化
@@ -275,7 +196,7 @@ def start_train(sigm=0.1):
 
     num = 0
     for c in range(len(Nor_testX)):
-        if predict_results[c] == data_testlab[c]:
+        if predict_results[c] == label_test[c]:
             num =num +1
 
     return num/len(Nor_testX)
@@ -284,7 +205,7 @@ def start_train(sigm=0.1):
 # out = start_train(0.1)
 # print(out)
     
-rf_bo = BayesianOptimization(start_train,{'sigm':(0,1)})
+rf_bo = BayesianOptimization(start_train,{'sigm':(0.01,1.5)})
 rf_bo.maximize()
     
     

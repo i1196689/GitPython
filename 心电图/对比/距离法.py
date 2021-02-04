@@ -54,58 +54,66 @@ data_f = import_excel_matrix(path_f)
 
 data_ts = import_excel_matrix(path_ts)
 
-def get_num(data,s,r = 0.03):
+print('数据导入结束。开始计算...')
+def get_num(data,s):
     data = np.mat(data)    
     [m,n] = data.shape
-    lev = (m/(1/(2*r)))
     
     out = []
     for i in range(n):
-        num_down = s[i] - r
-        num_up = s[i] + r
-
-        dia = [num_down,num_up]
-        if num_down <= 0 :
-            num_down = 0
-        if num_up >= 1:
-            num_up = 1
-        if num_down == 0:
-            dia = [0,r]
-        if num_up == 1:
-            dia = [1-2*r,1]
-        
         tem_m = data[:,i]
-        tem_m = np.array(tem_m)
-        new_list = tem_m[(dia[0] <= tem_m) & (tem_m <= dia[1])]
-        num = len(new_list)
-
+        num = tem_m - s[i]
+        num = list(map(abs,num))
+        num = sum(num)/m       
         out.append(num)
-    for t in range(len(out)):
-        # if out[t] >= lev:
-        #     out[t] = 1
-        # else:
-        #     out[t] = 0     
-        out[t] = out[t]/lev  
-    return sum(out)
-# s_v = data_v[0]
 
-def start_train(r):
-    rate = 0
-    data_sect = data_ts
-    for i in range(len(data_sect)):
-        s_s = data_sect[i]
-        out_1 = get_num(data_s,s_s,r)
-        out_2 = get_num(data_v,s_s,r)
-        out_3 = get_num(data_n,s_s,r)
-        out_4 = get_num(data_u,s_s,r)
-        out_5 = get_num(data_f,s_s,r)
+    return sum(out),out
 
-        if out_1 == max([out_1,out_2,out_3,out_4,out_5]):
-            rate = rate + 1
 
-    return rate/len(data_sect)
+# def start_train():
+#     rate = 0
+#     data_sect = data_ts
+#     for i in range(len(data_sect)):
+#         s_s = data_sect[i]
+#         out_1 = get_num(data_s,s_s)
+#         out_2 = get_num(data_v,s_s)
+#         out_3 = get_num(data_n,s_s)
+#         out_4 = get_num(data_u,s_s)
+#         out_5 = get_num(data_f,s_s)
+
+#         if out_1 == min([out_1,out_2,out_3,out_4,out_5]):
+#             rate = rate + 1
+#     print(rate/len(data_sect))
+
+#     return rate/len(data_sect)
+# s = start_train()
+# print(s)
 
 
 
-rf_bo = BayesianOptimization(start_train,{'r':(0.001,0.4999)})
-rf_bo.maximize()
+data_sect = data_ts
+
+s_s = data_sect[0]
+out_1,list_1 = get_num(data_s,s_s)
+out_2,list_2 = get_num(data_v,s_s)
+out_3,list_3 = get_num(data_n,s_s)
+out_4,list_4 = get_num(data_u,s_s)
+out_5,list_5 = get_num(data_f,s_s)
+
+out = [out_1,out_2,out_3,out_4,out_5]
+print(out)
+
+    # if out_1 == min([out_1,out_2,out_3,out_4,out_5]):
+    #     rate = rate + 1
+    # print('已经计算%s'%(i/len(data_sect)))
+# print(rate/len(data_sect))
+path_1 = r'C:\Users\liuju\Documents\MATLAB\MIT_HIT\对比\五种类别\list_1.xlsx'
+path_2 = r'C:\Users\liuju\Documents\MATLAB\MIT_HIT\对比\五种类别\list_2.xlsx'
+path_3 = r'C:\Users\liuju\Documents\MATLAB\MIT_HIT\对比\五种类别\list_3.xlsx'
+path_4 = r'C:\Users\liuju\Documents\MATLAB\MIT_HIT\对比\五种类别\list_4.xlsx'
+path_5 = r'C:\Users\liuju\Documents\MATLAB\MIT_HIT\对比\五种类别\list_5.xlsx'
+save(list_1,path_1)
+save(list_2,path_2)
+save(list_3,path_3)
+save(list_4,path_4)
+save(list_5,path_5)

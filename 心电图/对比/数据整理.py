@@ -31,10 +31,12 @@ def save(data,path):
     f.close()
 
 #path_test = r'C:\Users\666\Documents\MATLAB\MIT_HIT\整理数据\test合集.xlsx'
-path_train = r'C:\Users\666\Documents\MATLAB\MIT_HIT\整理数据\train合集.xlsx'
-path = r'C:\Users\666\Documents\MATLAB\MIT_HIT\整理数据\train已处理.xlsx'
-path_lab = r'C:\Users\666\Documents\MATLAB\MIT_HIT\整理数据\train_lab.xlsx'
-
+path_train = r'C:\Users\liuju\Documents\MATLAB\MIT_HIT\整理数据\test合集.xlsx'
+path_n = r'C:\Users\liuju\Documents\MATLAB\MIT_HIT\对比\五种类别\N.xlsx'
+path_s = r'C:\Users\liuju\Documents\MATLAB\MIT_HIT\对比\五种类别\S.xlsx'
+path_v = r'C:\Users\liuju\Documents\MATLAB\MIT_HIT\对比\五种类别\V.xlsx'
+path_f = r'C:\Users\liuju\Documents\MATLAB\MIT_HIT\对比\五种类别\F.xlsx'
+path_u = r'C:\Users\liuju\Documents\MATLAB\MIT_HIT\对比\五种类别\U.xlsx'
 
 data = import_excel_matrix(path_train)
 test_lab = []
@@ -57,50 +59,30 @@ for men in data:
         men.extend(log_S)
         data_s.append(men)
         
-    elif men[261] in ['V','E']:
+    if men[261] in ['V','E']:
         men.append('V')
         men.extend(log_V)
         data_v.append(men)
         
-    elif men[261] == 'F':
+    if men[261] == 'F':
         men.append('F')
         men.extend(log_F)
         data_f.append(men)
         
-    elif men[261] in  ['N','L','R','e','j']:
+    if men[261] in  ['N','L','R','e','j']:
         men.append('N')
         men.extend(log_N)
         data_n.append(men)
         
-    elif men[261] in ['/','f','Q']:
+    if men[261] in ['/','f','Q']:
         men.append('U')
         men.extend(lgo_U)
         data_u.append(men)
-        
-    else:
-        data.remove(men)
+
     
+save(data_n,path_n)
+save(data_s,path_s)
+save(data_f,path_f)
+save(data_v,path_v)
+save(data_u,path_u)
 
-
-
-max_nun = max(len(data_f),len(data_u),len(data_n),len(data_v),len(data_s))
-mul = []
-for i in range(max_nun):
-    if i < len(data_n):
-        mul.append(data_n[i])
-        test_lab.append(log_N)
-    if i < len(data_v):
-        mul.append(data_v[i])
-        test_lab.append(log_V)
-    if i < len(data_s):
-        mul.append(data_s[i])
-        test_lab.append(log_S)
-    if i < len(data_f):
-        mul.append(data_f[i])
-        test_lab.append(log_F)
-    if i < len(data_u):
-        mul.append(data_u[i])
-        test_lab.append(lgo_U)
-
-save(mul,path)
-save(test_lab,path_lab)

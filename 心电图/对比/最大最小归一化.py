@@ -36,8 +36,8 @@ def save(data,path):
             sheet1.write(i, j, data[i][j])
     f.close()
 
-path = r'C:\Users\liuju\Documents\MATLAB\MIT_HIT\对比\最大最小归一化\V.xlsx'
-path_s = r'C:\Users\liuju\Documents\MATLAB\MIT_HIT\对比\最大最小归一化\已经处理\V.xlsx'
+path = r'C:\Users\liuju\Documents\MATLAB\MIT_HIT\对比\五种类别\train\U.xlsx'
+path_s = r'C:\Users\liuju\Documents\MATLAB\MIT_HIT\对比\五种类别\train\归一化\U.xlsx'
 
 data = import_excel_matrix(path)
 
@@ -59,4 +59,3 @@ save(data,path_s)
 
 plt.plot(data[0])
 plt.show()
-print(data[0][-1])
